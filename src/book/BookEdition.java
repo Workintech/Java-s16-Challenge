@@ -1,0 +1,11 @@
+package book;
+
+public enum BookEdition {
+    FIRST_EDITION,
+    REVISED_EDITION,
+    EXPANDED_EDITION,
+    SPECIAL_EDITION,
+    POCKET_EDITION,
+    HARDCOVER_EDITION,
+    PAPERBACK_EDITION
+}
