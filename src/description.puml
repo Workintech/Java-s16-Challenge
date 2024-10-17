@@ -1,0 +1,116 @@
+@startuml
+package person {
+
+    class Person {
+        - name: String
+        # whoyouare(): String
+    }
+
+    class Reader {
+        - member_record: MemberRecord
+        ---
+        + setMember_record(memberRecord: MemberRecord): void
+        + getMember_record(): MemberRecord
+        # whoyouare(): String
+    }
+
+    class Author {
+        - books: Set<Book>
+        + show_book(): Set<Book>
+        + setBooks(books: Set<Book>): void
+        + new_book(book: Book): boolean
+        + whoyouare(): String
+    }
+
+    class Librarian {
+        - password: String
+        - library: Library
+        + getLibrary(): Library
+        + createRecord(reader: Reader, memberRecord: MemberRecord): boolean
+        + addReaderToLibrary(reader: Reader): boolean
+        + giveBackBook(bookId: long): boolean
+        + whoyouare(): String
+    }
+
+    class MemberRecord {
+        - member_id: long
+        - library: Library
+        - reader: Reader
+        - type: membershipType
+        - date_of_membership: CustomDate
+        - lendedBooks: Set<Book>
+        - MAX_LENDED_BOOKS: int
+        - dept: double
+        + MemberRecord()
+        + MemberRecord(member_id: long, type: membershipType, reader: Reader, library: Library)
+        + getDept(): double
+        + getLendedBooks(): Set<Book>
+        + getLibrary(): Library
+        + setLibrary(library: Library): void
+        + addBookToLendedBooks(book: Book): boolean
+        + returnBook(id: long): boolean
+        + toString(): String
+    }
+
+    Person <|-- Author  : Inherits
+    Person <|-- Reader  : Inherits
+    Person <|-- Librarian  : Inherits
+    Reader --> MemberRecord : Has a
+    MemberRecord --> Library : Uses
+}
+
+package book {
+    class Book {
+        + getPrice(): double
+        + getName(): String
+        + setStatus(status: BookStatus): void
+        + setOwner(owner: MemberRecord): void
+        + get_author(): Author
+        + getGenre(): GenreEnum
+        + lendBook(record: MemberRecord): void
+        + getBookId(): long
+    }
+
+    class BookStatus {
+        <<enumeration>>
+        + AVAILABLE
+        + ON_HOLD
+        + LENT_OUT
+    }
+
+    class GenreEnum {
+        <<enumeration>>
+        + FICTION
+        + NON_FICTION
+        + SCI_FI
+        + BIOGRAPHY
+        + FANTASY
+    }
+}
+
+package library {
+    class Library {
+        - books: Map<Long, Book>
+        - readers: Map<String, Reader>
+        + Library()
+        + Library(books: Map<Long, Book>, readers: Map<String, Reader>)
+        + get_book(): Map<Long, Book>
+        + get_book(id: long): Book
+        + get_book(name: String): Book
+        + get_book(author: Author): Set<Book>
+        + deleteBook(id: long): boolean
+        + getBooksByGenre(genre: GenreEnum): List<Book>
+        + get_readers(): Map<String, Reader>
+        + searchForReader(name: String): Reader
+        + new_book(book: Book): boolean
+        + addReader(reader: Reader): boolean
+        + lendBook(bookId: long, readerName: String): boolean
+        + toString(): String
+    }
+}
+
+Author --> Book : Has a Set of
+Library --> Book : Contains
+Library --> Reader : Contains
+Library --> MemberRecord : Uses
+@enduml
